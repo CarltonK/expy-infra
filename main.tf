@@ -4,3 +4,15 @@ provider "google" {
   region      = "europe-west3"
   zone        = "europe-west3-a"
 }
+
+
+# Terraform Backend
+terraform {
+  backend "remote" {
+    organization = "kweli-smart"
+
+    workspaces {
+      name = "expy-infra"
+    }
+  }
+}
