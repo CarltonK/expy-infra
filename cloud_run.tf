@@ -21,10 +21,10 @@ resource "google_cloud_run_service" "default" {
 }
 
 resource "google_sql_database_instance" "instance" {
-  name   = "cloudrun-sql"
+  name = "cloudrun-sql"
   settings {
     tier = "db-f1-micro"
   }
 
-  deletion_protection  = "true"
+  deletion_protection = "true"
 }
