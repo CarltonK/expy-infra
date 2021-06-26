@@ -1,5 +1,6 @@
 # resource "google_cloud_run_service" "default" {
 #   name     = "cloudrun-srv"
+#   location = "europe-west3"
 
 #   template {
 #     spec {
@@ -20,10 +21,10 @@
 # }
 
 # resource "google_sql_database_instance" "instance" {
-#   name   = "cloudrun-sql"
+#   name = "cloudrun-sql"
 #   settings {
 #     tier = "db-f1-micro"
 #   }
 
-#   deletion_protection  = "true"
+#   deletion_protection = "true"
 # }
