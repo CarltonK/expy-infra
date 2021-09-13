@@ -7,10 +7,10 @@ terraform {
     }
   }
   # backend "remote" {
-  #   organization = "kweli-smart"
+  #   organization = var.org_name
 
   #   workspaces {
-  #     name = "expy-infra"
+  #     name = var.workspace_id
   #   }
   # }
 }
