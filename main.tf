@@ -7,17 +7,17 @@ terraform {
     }
   }
   # backend "remote" {
-  #   organization = "kweli-smart"
+  #   organization = var.org_name
 
   #   workspaces {
-  #     name = "expy-infra"
+  #     name = var.workspace_id
   #   }
   # }
 }
 
 provider "google" {
   # Needed for CI pipeline
-  # credentials = file("CREDENTIALS_FILE.json")
+  credentials = file("CREDENTIALS_FILE.json")
   project     = var.project_id
   region      = var.location_id
   zone        = var.zone_id
