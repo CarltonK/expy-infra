@@ -25,11 +25,10 @@ variable "workspace_id" {
 
 variable "database_user" {
   type        = string
-  description = "Terraform workspace name"
+  description = "Database User"
 }
 
 variable "database_password" {
   type        = string
-  description = "Terraform workspace name"
+  description = "Database Password"
 }
-
