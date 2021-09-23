@@ -22,3 +22,14 @@ variable "workspace_id" {
   type        = string
   description = "Terraform workspace name"
 }
+
+variable "database_user" {
+  type        = string
+  description = "Terraform workspace name"
+}
+
+variable "database_password" {
+  type        = string
+  description = "Terraform workspace name"
+}
+
