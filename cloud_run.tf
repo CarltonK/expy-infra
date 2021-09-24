@@ -3,11 +3,50 @@ resource "google_project_service" "run" {
   service = "run.googleapis.com"
 }
 
+resource "google_project_service" "secretmanager" {
+  provider = google-beta
+  service  = "secretmanager.googleapis.com"
+}
+
+# Secret Manager
+resource "google_secret_manager_secret" "database_user" {
+  provider = google-beta
+
+  secret_id = "database_user"
+
+  replication {
+    automatic = true
+  }
+
+  depends_on = [google_project_service.secretmanager]
+}
+
+resource "google_secret_manager_secret_version" "database_user_version" {
+  provider    = google-beta
+  secret      = google_secret_manager_secret.database_user.id
+  secret_data = var.database_user
+}
+
+resource "google_secret_manager_secret" "database_password" {
+  secret_id = "database_password"
+
+  replication {
+    automatic = true
+  }
+
+  depends_on = [google_project_service.secretmanager]
+}
+
+resource "google_secret_manager_secret_version" "database_password_version" {
+  secret      = google_secret_manager_secret.database_password.id
+  secret_data = var.database_password
+}
+
 # Cloud SQL
 resource "google_sql_database_instance" "instance" {
-  name   = "expy-db"
-  region = var.location_id
-  database_version = "POSTGRES_11"
+  name                = "${var.project_name}-${var.workspace_env}-db"
+  region              = var.location_id
+  database_version    = "POSTGRES_11"
   deletion_protection = "false"
 
   settings {
@@ -16,7 +55,7 @@ resource "google_sql_database_instance" "instance" {
 }
 
 resource "google_sql_database" "database" {
-  name     = "expy-db"
+  name     = "${var.project_name}-${var.workspace_env}-db"
   instance = google_sql_database_instance.instance.name
 }
 
@@ -28,19 +67,23 @@ resource "google_sql_user" "database-user" {
 
 # Cloud Run
 resource "google_cloud_run_service" "expy-dev" {
-  name     = "expy-dev"
+  name     = "${var.project_name}-${var.workspace_env}"
   location = var.location_id
 
   template {
     spec {
       containers {
-        image = "gcr.io/${var.project_id}/expy-dev:latest"
+        image = "gcr.io/${var.project_id}/${var.project_name}-${var.workspace_env}:latest"
         ports {
           container_port = 8080
         }
+        env {
+          name  = "NODE_ENV"
+          value = var.workspace_env
+        }
       }
-      # TODO: Use TF
-      service_account_name = "expy-dev-591@expy-317620.iam.gserviceaccount.com"
+
+      service_account_name = "${var.project_name}-${var.workspace_env}-591@${var.project_id}.iam.gserviceaccount.com"
     }
 
     metadata {
@@ -66,18 +109,24 @@ resource "google_cloud_run_service_iam_member" "allUsers" {
 }
 
 # Cloud Build
-resource "google_cloudbuild_trigger" "dev-cloud-run-builder" {
-  trigger_template {
-    branch_name = "develop"
-    repo_name   = "expense_manager"
+resource "google_cloudbuild_trigger" "build-trigger" {
+  name = "${var.workspace_env}-cloud-run-builder"
+  tags = [ var.workspace_env ]
+
+  github {
+    owner = "CarltonK"
+    name  = "expense_manager"
+    push {
+      branch = "develop"
+    }
   }
 
   substitutions = {
     _CONNECTION_NAME = google_sql_database_instance.instance.connection_name
-    _DATABASE_URL = "postgres://${var.database_user}:${var.database_password}@localhost/${google_sql_database_instance.instance.name}?host=/cloudsql/${google_sql_database_instance.instance.connection_name}"
-    _PROJECT_REGION = var.location_id
-    _PROJECT_SERVICE = "expy-dev"
+    _DATABASE_URL    = "postgres://${var.database_user}:${var.database_password}@localhost/${google_sql_database_instance.instance.name}?host=/cloudsql/${google_sql_database_instance.instance.connection_name}"
+    _PROJECT_REGION  = var.location_id
+    _PROJECT_SERVICE = "${var.project_name}-${var.workspace_env}"
   }
 
-  filename = "cloudbuild/dev.yaml"
+  filename = "cloudbuild/${var.workspace_env}.yaml"
 }
