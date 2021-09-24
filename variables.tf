@@ -32,3 +32,13 @@ variable "database_password" {
   type        = string
   description = "Database Password"
 }
+
+variable "project_name" {
+  type        = string
+  description = "Expy"
+}
+
+variable "workspace_env" {
+  type        = string
+  description = "Workspace environment"
+}
