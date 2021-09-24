@@ -3,6 +3,7 @@ resource "google_project_service" "run" {
   service = "run.googleapis.com"
 }
 
+# Enable Secret Manager API
 resource "google_project_service" "secretmanager" {
   provider = google-beta
   service  = "secretmanager.googleapis.com"
@@ -38,6 +39,7 @@ resource "google_secret_manager_secret" "database_password" {
 }
 
 resource "google_secret_manager_secret_version" "database_password_version" {
+  provider    = google-beta
   secret      = google_secret_manager_secret.database_password.id
   secret_data = var.database_password
 }
