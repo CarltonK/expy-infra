@@ -2,7 +2,7 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "3.83.0"
     }
   }
@@ -21,4 +21,9 @@ provider "google" {
   project     = var.project_id
   region      = var.location_id
   zone        = var.zone_id
+}
+
+provider "google-beta" {
+  project = var.project_id
+  credentials = file("CREDENTIALS_FILE.json")
 }
