@@ -42,3 +42,13 @@ variable "workspace_env" {
   type        = string
   description = "Workspace environment"
 }
+
+variable "github_user" {
+  type        = string
+  description = "Name of the Github user"
+}
+
+variable "github_repo" {
+  type = string
+  description = "Expy repo"
+}
