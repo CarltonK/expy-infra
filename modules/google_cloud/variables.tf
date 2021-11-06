@@ -13,11 +13,6 @@ variable "zone_id" {
   description = "Zone within region"
 }
 
-variable "org_name" {
-  type        = string
-  description = "Google cloud organization name"
-}
-
 variable "database_user" {
   type        = string
   description = "Database User"
