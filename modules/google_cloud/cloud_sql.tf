@@ -1,6 +1,6 @@
 # Cloud SQL
 resource "google_sql_database_instance" "instance" {
-  name                = "${var.project_name}-${var.workspace_env}-db"
+  name                = "${var.project_name}-${random_uuid.random.result}-${var.workspace_env}-db"
   region              = var.location_id
   database_version    = "POSTGRES_11"
   deletion_protection = "false"
@@ -20,3 +20,5 @@ resource "google_sql_user" "database-user" {
   instance = google_sql_database_instance.instance.name
   password = var.database_password
 }
+
+resource "random_uuid" "random" {}
