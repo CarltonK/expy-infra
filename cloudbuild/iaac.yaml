@@ -26,3 +26,4 @@ steps:
     entrypoint: sh
     args: ["/workspace/cloudbuild/scripts/tf-apply.sh", "${BRANCH_NAME}"]
 logsBucket: gs://expy-build-logs
+timeout: 900s
