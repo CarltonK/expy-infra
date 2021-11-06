@@ -1,0 +1,28 @@
+steps:
+  - id: "Branch name"
+    name: alpine
+    entrypoint: sh
+    args:
+      [
+        "/workspace/cloudbuild/scripts/variable-substitution.sh",
+        "${BRANCH_NAME}",
+        "${PROJECT_ID}",
+        "${_DATABASE_USER}",
+        "${_DATABASE_PASSWORD}"
+      ]
+
+  - id: "Init"
+    name: hashicorp/terraform:1.0.0
+    entrypoint: sh
+    args: ["/workspace/cloudbuild/scripts/tf-init.sh", "${BRANCH_NAME}"]
+
+  - id: "Plan"
+    name: hashicorp/terraform:1.0.0
+    entrypoint: sh
+    args: ["/workspace/cloudbuild/scripts/tf-plan.sh", "${BRANCH_NAME}"]
+
+  - id: "Apply"
+    name: hashicorp/terraform:1.0.0
+    entrypoint: sh
+    args: ["/workspace/cloudbuild/scripts/tf-apply.sh", "${BRANCH_NAME}"]
+logsBucket: gs://expy-build-logs

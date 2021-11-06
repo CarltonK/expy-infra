@@ -15,7 +15,7 @@ resource "google_cloud_run_service" "expy-dev" {
           value = var.workspace_env
         }
         env {
-          name = "ACCESS_TOKEN"
+          name  = "ACCESS_TOKEN"
           value = var.database_password
         }
       }
@@ -43,27 +43,4 @@ resource "google_cloud_run_service_iam_member" "allUsers" {
   location = google_cloud_run_service.expy-dev.location
   role     = "roles/run.invoker"
   member   = "allUsers"
-}
-
-# Cloud Build
-resource "google_cloudbuild_trigger" "build-trigger" {
-  name = "${var.workspace_env}-cloud-run-builder"
-  tags = [ var.workspace_env ]
-
-  github {
-    owner = "CarltonK"
-    name  = "expense_manager"
-    push {
-      branch = "develop"
-    }
-  }
-
-  substitutions = {
-    _CONNECTION_NAME = google_sql_database_instance.instance.connection_name
-    _DATABASE_URL    = "postgres://${var.database_user}:${var.database_password}@localhost/${google_sql_database_instance.instance.name}?host=/cloudsql/${google_sql_database_instance.instance.connection_name}"
-    _PROJECT_REGION  = var.location_id
-    _PROJECT_SERVICE = "${var.project_name}-${var.workspace_env}"
-  }
-
-  filename = "cloudbuild/${var.workspace_env}.yaml"
 }

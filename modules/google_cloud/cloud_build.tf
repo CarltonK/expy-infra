@@ -1,7 +1,7 @@
 # Cloud Build
 resource "google_cloudbuild_trigger" "build-trigger" {
   name = "${var.workspace_env}-cloud-run-builder"
-  tags = [ var.workspace_env ]
+  tags = [var.workspace_env]
 
   github {
     owner = var.github_user
