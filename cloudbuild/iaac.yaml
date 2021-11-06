@@ -8,7 +8,7 @@ steps:
         "${BRANCH_NAME}",
         "${PROJECT_ID}",
         "${_DATABASE_USER}",
-        "${_DATABASE_PASSWORD}"
+        "${_DATABASE_PASSWORD}",
       ]
 
   - id: "Init"
