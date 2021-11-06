@@ -13,16 +13,6 @@ variable "zone_id" {
   description = "Zone within region"
 }
 
-variable "org_name" {
-  type        = string
-  description = "Google cloud organization name"
-}
-
-variable "workspace_id" {
-  type        = string
-  description = "Terraform workspace name"
-}
-
 variable "database_user" {
   type        = string
   description = "Database User"
@@ -49,6 +39,6 @@ variable "github_user" {
 }
 
 variable "github_repo" {
-  type = string
+  type        = string
   description = "Expy repo"
 }
