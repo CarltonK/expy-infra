@@ -25,4 +25,4 @@ steps:
     name: hashicorp/terraform:1.0.0
     entrypoint: sh
     args: ["/workspace/cloudbuild/scripts/tf-apply.sh", "${BRANCH_NAME}"]
-# logsBucket: gs://kweli-build-logs
+logsBucket: gs://expy-build-logs
