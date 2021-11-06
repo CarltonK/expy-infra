@@ -22,5 +22,7 @@ resource "google_sql_user" "database-user" {
 }
 
 resource "random_string" "random" {
-  length = 4
+  length           = 4
+  special          = true
+  override_special = "expy"
 }
