@@ -6,7 +6,7 @@ resource "google_cloud_run_service" "expy-dev" {
   template {
     spec {
       containers {
-        image = "gcr.io/${var.project_id}/${var.project_name}-${var.workspace_env}:latest"
+        image = "gcr.io/${var.project_id}/${var.project_name}-${var.workspace_env}:latest-unstable"
         ports {
           container_port = 8080
         }
